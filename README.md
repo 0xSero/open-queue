@@ -1,6 +1,6 @@
 # Message Queue Plugin for OpenCode
 
-[![npm version](https://img.shields.io/npm/v/open-queue.svg)](https://www.npmjs.com/package/open-queue)
+[![npm version](https://img.shields.io/npm/v/@0xsero/open-queue.svg)](https://www.npmjs.com/package/@0xsero/open-queue)
 
 Control how messages behave while a session is running. Queue them up or send them immediately.
 
@@ -24,21 +24,21 @@ I can't fix that yet, but the functionality does work the model won't see the 2n
 ```bash
 # In your project's .opencode directory
 cd .opencode
-bun add open-queue
+bun add @0xsero/open-queue
 ```
 
 Then add to your `.opencode/opencode.jsonc`:
 
 ```jsonc
 {
-  "plugin": ["open-queue"]
+  "plugin": ["@0xsero/open-queue"]
 }
 ```
 
 Optionally, copy the slash command to your project:
 
 ```bash
-cp node_modules/open-queue/command/queue.md .opencode/command/
+cp node_modules/@0xsero/open-queue/command/queue.md .opencode/command/
 ```
 
 ### From source
@@ -46,15 +46,15 @@ cp node_modules/open-queue/command/queue.md .opencode/command/
 Clone this repo and run OpenCode directly:
 
 ```bash
-git clone https://github.com/0xSero/open-queue.git
-cd open-queue
+git clone https://github.com/0xSero/@0xsero/open-queue.git
+cd @0xsero/open-queue
 opencode
 ```
 
 Or copy `.opencode/` to your project:
 
 ```bash
-cp -r open-queue/.opencode your-project/
+cp -r @0xsero/open-queue/.opencode your-project/
 cd your-project/.opencode && bun install
 ```
 
