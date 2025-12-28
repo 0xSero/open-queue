@@ -30,6 +30,10 @@
   - Runs `tsc` then `bun test test/queue.test.mjs`.
   - All tests passing.
 
+## Publish
+- `npm publish --access public` succeeded for `@0xsero/open-queue@1.0.11`.
+- npm emitted warnings about `bin` entries (scoped bin key and install script path). Package published, but bin metadata may need cleanup if CLI behavior is impacted.
+
 ## Notes
 - Internal queue sends are marked via text part metadata to avoid re-queueing while still allowing user messages to queue during drain.
 - Empty toast now replaces the queue toast when pending hits zero, lasting 3–5 seconds by default.
