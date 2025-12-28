@@ -1,6 +1,6 @@
 {
   "name": "@0xsero/open-queue",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Message queue plugin for OpenCode - control message flow with hold/immediate modes",
   "keywords": [
     "opencode",
@@ -30,7 +30,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test": "npm run build && bun test test/queue.test.mjs"
   },
   "license": "MIT",
   "engines": {
