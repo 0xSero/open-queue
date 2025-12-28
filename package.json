@@ -1,6 +1,6 @@
 {
   "name": "opencode-message-queue",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "OpenCode plugin to queue user messages while a run is in progress",
   "keywords": [
     "opencode",
