@@ -1,7 +1,7 @@
 {
-  "name": "opencode-message-queue",
-  "version": "0.1.1",
-  "description": "OpenCode plugin to queue user messages while a run is in progress",
+  "name": "@0xsero/open-queue",
+  "version": "1.0.3",
+  "description": "Message queue plugin for OpenCode - control message flow with hold/immediate modes",
   "keywords": [
     "opencode",
     "plugin",
@@ -27,7 +27,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "clean": "rm -rf dist"
   },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "engines": {
     "node": ">=20"
   },
