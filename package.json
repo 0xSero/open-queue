@@ -1,0 +1,45 @@
+{
+  "name": "open-queue",
+  "version": "1.0.0",
+  "description": "Message queue plugin for OpenCode - control message flow with hold/immediate modes",
+  "type": "module",
+  "main": "dist/message-queue.js",
+  "types": "dist/message-queue.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/message-queue.d.ts",
+      "import": "./dist/message-queue.js"
+    }
+  },
+  "files": [
+    "dist",
+    "command"
+  ],
+  "scripts": {
+    "build": "bun build .opencode/plugin/message-queue.ts --outdir dist --target node --external @opencode-ai/plugin --external @opencode-ai/sdk --external zod && bun run build:types && mkdir -p command && cp .opencode/command/queue.md command/",
+    "build:types": "tsc --emitDeclarationOnly --declaration --outDir dist",
+    "prepublishOnly": "bun run build"
+  },
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "message-queue",
+    "ai",
+    "llm"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/0xSero/open-queue"
+  },
+  "peerDependencies": {
+    "@opencode-ai/plugin": ">=1.0.0",
+    "@opencode-ai/sdk": ">=1.0.0"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "1.0.204",
+    "@opencode-ai/sdk": "^1.0.0",
+    "typescript": "^5.0.0"
+  }
+}
