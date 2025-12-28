@@ -1,6 +1,6 @@
 {
   "name": "@0xsero/open-queue",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Message queue plugin for OpenCode - control message flow with hold/immediate modes",
   "keywords": [
     "opencode",
