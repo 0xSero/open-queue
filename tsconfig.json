@@ -2,16 +2,14 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",
-    "moduleResolution": "bundler",
-    "lib": ["ES2022"],
+    "moduleResolution": "Bundler",
     "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
     "declaration": true,
-    "declarationMap": true,
     "outDir": "dist",
-    "rootDir": ".opencode/plugin"
+    "rootDir": "src",
+    "verbatimModuleSyntax": true,
+    "types": ["node"],
+    "skipLibCheck": true
   },
-  "include": [".opencode/plugin/**/*.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*.ts"]
 }

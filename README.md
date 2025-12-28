@@ -1,124 +1,69 @@
-# Message Queue Plugin for OpenCode
+# OpenCode Message Queue Plugin
 
-[![npm version](https://img.shields.io/npm/v/@0xsero/open-queue.svg)](https://www.npmjs.com/package/@0xsero/open-queue)
+[queue-power.svg](assets/queue-power.svg)
 
-Control how messages behave while a session is running. Queue them up or send them immediately.
+Tiny plugin that controls how user messages behave while a session is running.
 
-## NOTE
+Why this is useful
+- Prevents mid-run interruptions: long tool runs or multi-step reasoning won't get derailed by accidental follow-ups.
+- Lets you batch thoughts: drop several messages while the model is working, then deliver them in order once it finishes.
+- Matches Codex-style flow: no surprise context shifts while a response is still in progress.
 
-Be aware that when a message is sent while model is running it looks like it's sent, then when the model is really done it gets sent again. 
+Modes
+- `immediate` (default): send messages right away.
+- `hold`: queue messages until the current run finishes, then send in order.
 
-I can't fix that yet, but the functionality does work the model won't see the 2nd message until after it's done
+Visual behavior in `hold`
+- When you send a message mid-run, the UI shows a `Queued (will send after current run; N pending)` placeholder.
+- When the run finishes, your original message is sent once.
+- A toast shows pending messages and stays until you close it (TUI only).
 
-## Modes
-
-| Mode | Behavior |
-|------|----------|
-| `immediate` | Messages are sent right away (default) |
-| `hold` | Messages are queued until the current run finishes, then sent in order |
-
-## Installation
+## Install (npm/bun)
 
 ```bash
-cd .opencode
-bun add @0xsero/open-queue
+bun add opencode-message-queue
+# or: npm i opencode-message-queue
 ```
 
-Then add to your `.opencode/opencode.jsonc`:
+Add to `opencode.json`:
 
-```jsonc
+```json
 {
-  "plugin": ["@0xsero/open-queue"]
+  "plugin": ["opencode-message-queue"]
 }
 ```
 
-Optionally, copy the slash command to your project:
+Slash command (optional)
 
 ```bash
-cp node_modules/@0xsero/open-queue/command/queue.md .opencode/command/
+mkdir -p .opencode/command
+cp node_modules/opencode-message-queue/command/queue.md .opencode/command/
 ```
+
+## Local (no install)
+
+This repo already includes the plugin at `.opencode/plugin/message-queue.ts` and the command at `.opencode/command/queue.md`.
 
 ## Usage
 
-### Slash Command
-
-The easiest way to control the queue is with the `/queue` command:
-
-```
-/queue status     # Check current mode and queue size
-/queue hold       # Start queueing messages
-/queue immediate  # Send messages immediately (drains any queued)
-```
-
-### Environment Variable
-
-Set the initial mode via environment variable:
+Environment variables:
 
 ```bash
-# Start in hold mode
 OPENCODE_MESSAGE_QUEUE_MODE=hold opencode
-
-# Start in immediate mode (default)
 OPENCODE_MESSAGE_QUEUE_MODE=immediate opencode
+# Keep queue toasts open until dismissed (default)
+OPENCODE_MESSAGE_QUEUE_TOAST_DURATION_MS=0 opencode
 ```
 
-### Programmatic (via LLM)
+Slash command (if installed):
 
-The plugin exposes a `queue` tool that the LLM can invoke directly:
-
-- "Set queue mode to hold"
-- "Check queue status"
-- "Switch to immediate mode"
-
-## How It Works
-
-### Hold Mode
-
-When in `hold` mode:
-
-1. Incoming messages are intercepted by the `chat.message` hook
-2. Message parts are converted and stored in a per-session queue
-3. Text parts are marked as `ignored` to hide them from the current run
-4. When the session becomes idle (`session.status` or `session.idle` events), queued messages are drained in order via `client.session.prompt()`
-
-### Immediate Mode
-
-When in `immediate` mode:
-
-1. Messages pass through without modification
-2. Any existing queued messages are drained when switching from hold to immediate
-
-## API
-
-### Tool: `queue`
-
-| Action | Description |
-|--------|-------------|
-| `status` | Returns current mode, queue size, and session busy state |
-| `hold` | Sets mode to hold (queue messages) |
-| `immediate` | Sets mode to immediate and drains any queued messages |
-
-### Events Handled
-
-- `session.status` - Tracks busy/idle state, drains queue when idle
-- `session.idle` - Alternative idle detection, drains queue
-
-### Hooks Used
-
-- `chat.message` - Intercepts messages in hold mode, queues them, marks text as ignored
+```
+/queue status
+/queue hold
+/queue immediate
+```
 
 ## Limitations
 
-- **Best-effort queueing**: OpenCode does not yet allow plugins to fully defer message creation. The plugin hides text content but non-text attachments may still be sent.
-- **Global mode**: The mode is global across all sessions. Per-session mode could be added if needed.
-- **Plugin scope**: Queued messages are lost if OpenCode restarts.
-
-## Links
-
-- [GitHub Repository](https://github.com/0xSero/open-queue)
-- [npm Package](https://www.npmjs.com/package/@0xsero/open-queue)
-- [Report Issues](https://github.com/0xSero/open-queue/issues)
-
-## License
-
-MIT
+- Best-effort queueing: OpenCode cannot fully defer message creation yet.
+- Queue is in-memory and resets when OpenCode restarts.

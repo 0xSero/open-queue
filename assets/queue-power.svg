@@ -1,0 +1,71 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1200" y2="720" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="hsl(30, 5%, 10.5%)"/>
+      <stop offset="1" stop-color="hsl(30, 5%, 12%)"/>
+    </linearGradient>
+    <linearGradient id="stream" x1="140" y1="360" x2="1060" y2="360" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="hsl(35, 15%, 70%)"/>
+      <stop offset="1" stop-color="hsl(35, 15%, 62%)"/>
+    </linearGradient>
+    <linearGradient id="pulse" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="hsl(35, 18%, 72%)"/>
+      <stop offset="1" stop-color="hsl(35, 18%, 60%)"/>
+    </linearGradient>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="720" fill="url(#paper)"/>
+
+  <g opacity="0.4">
+    <circle cx="220" cy="520" r="150" stroke="hsl(30, 5%, 20%)" stroke-width="2"/>
+    <circle cx="980" cy="170" r="120" stroke="hsl(30, 5%, 20%)" stroke-width="2"/>
+    <circle cx="1040" cy="560" r="90" stroke="hsl(30, 5%, 20%)" stroke-width="2"/>
+  </g>
+
+  <path d="M120 350C260 250 420 290 520 250C640 200 760 160 930 190C1050 215 1110 270 1130 320" stroke="hsl(30, 5%, 20%)" stroke-width="2" opacity="0.7"/>
+  <path d="M110 410C260 340 420 365 520 335C640 305 770 275 920 295C1040 315 1100 350 1130 380" stroke="hsl(30, 5%, 20%)" stroke-width="2" opacity="0.7"/>
+
+  <rect x="120" y="310" width="960" height="120" rx="60" fill="hsl(30, 5%, 12%)" stroke="hsl(30, 5%, 20%)" stroke-width="2"/>
+  <path d="M140 370H1060" stroke="url(#stream)" stroke-width="6" stroke-linecap="round"/>
+
+  <g filter="url(#soft)">
+    <circle cx="230" cy="370" r="18" fill="url(#pulse)"/>
+    <circle cx="310" cy="370" r="14" fill="url(#pulse)" opacity="0.9"/>
+    <circle cx="385" cy="370" r="12" fill="url(#pulse)" opacity="0.85"/>
+    <circle cx="455" cy="370" r="10" fill="url(#pulse)" opacity="0.8"/>
+    <circle cx="525" cy="370" r="8" fill="url(#pulse)" opacity="0.75"/>
+    <circle cx="595" cy="370" r="6" fill="url(#pulse)" opacity="0.7"/>
+  </g>
+
+  <g>
+    <rect x="650" y="318" width="240" height="104" rx="52" fill="hsl(30, 5%, 12%)" stroke="hsl(30, 5%, 20%)" stroke-width="2"/>
+    <rect x="700" y="345" width="140" height="50" rx="25" fill="hsl(30, 5%, 12%)" stroke="hsl(30, 5%, 20%)" stroke-width="2"/>
+  </g>
+
+  <g filter="url(#soft)">
+    <circle cx="900" cy="370" r="24" fill="hsl(35, 15%, 70%)"/>
+    <circle cx="900" cy="370" r="48" fill="hsl(35, 15%, 70%)" opacity="0.2"/>
+    <path d="M930 370H1015" stroke="hsl(40, 20%, 92%)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M990 350L1025 370L990 390" stroke="hsl(40, 20%, 92%)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <g>
+    <rect x="170" y="210" width="140" height="80" rx="16" fill="hsl(30, 5%, 12%)" stroke="hsl(30, 5%, 20%)" stroke-width="2"/>
+    <rect x="210" y="190" width="140" height="80" rx="16" fill="hsl(30, 5%, 12%)" stroke="hsl(30, 5%, 20%)" stroke-width="2"/>
+    <rect x="250" y="170" width="140" height="80" rx="16" fill="hsl(30, 5%, 12%)" stroke="hsl(30, 5%, 20%)" stroke-width="2"/>
+  </g>
+
+  <g>
+    <rect x="760" y="470" width="210" height="120" rx="24" fill="hsl(30, 5%, 12%)" stroke="hsl(30, 5%, 20%)" stroke-width="2"/>
+    <path d="M790 520H940" stroke="hsl(30, 5%, 20%)" stroke-width="2"/>
+    <path d="M790 545H915" stroke="hsl(30, 5%, 20%)" stroke-width="2"/>
+    <path d="M790 570H885" stroke="hsl(30, 5%, 20%)" stroke-width="2"/>
+  </g>
+</svg>

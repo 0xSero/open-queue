@@ -1,33 +1,43 @@
 {
-  "name": "@0xsero/open-queue",
-  "version": "1.0.2",
-  "description": "Message queue plugin for OpenCode - control message flow with hold/immediate modes",
-  "type": "module",
-  "main": "index.ts",
-  "files": [
-    "index.ts",
-    "command",
-    "LICENSE",
-    "README.md"
-  ],
+  "name": "opencode-message-queue",
+  "version": "0.1.0",
+  "description": "OpenCode plugin to queue user messages while a run is in progress",
   "keywords": [
     "opencode",
-    "opencode-plugin",
-    "message-queue",
-    "ai",
-    "llm"
+    "plugin",
+    "queue",
+    "message-queue"
   ],
-  "author": "0xSero",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/0xSero/open-queue"
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "command"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20"
   },
   "peerDependencies": {
-    "@opencode-ai/plugin": ">=1.0.0",
-    "@opencode-ai/sdk": ">=1.0.0"
+    "@opencode-ai/plugin": ">=1.0.0"
   },
-  "engines": {
-    "node": ">=18.0.0"
+  "devDependencies": {
+    "@opencode-ai/plugin": "^1.0.150",
+    "@opencode-ai/sdk": "^1.0.150",
+    "@types/node": "^20.14.10",
+    "typescript": "^5.9.3"
   }
 }

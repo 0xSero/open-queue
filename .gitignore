@@ -1,6 +1,5 @@
-node_modules/
-dist/
-command/
-*.log
-.DS_Store
+node_modules
 bun.lock
+npm-debug.log
+dist
+.opencode/user.*
