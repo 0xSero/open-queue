@@ -6,10 +6,14 @@ import type {
   SubtaskPartInput,
   TextPartInput,
 } from "@opencode-ai/sdk"
+import fs from "fs"
+
 
 type ModelRef = { providerID: string; modelID: string }
 
 type PromptPart = TextPartInput | FilePartInput | AgentPartInput | SubtaskPartInput
+
+type QueuePriority = "low" | "normal" | "high" | any
 
 type QueuedMessage = {
   sessionID: string
@@ -19,7 +23,10 @@ type QueuedMessage = {
   tools?: Record<string, boolean>
   parts: PromptPart[]
   preview: string
+  priority: QueuePriority
+  enqueuedAt: number
   status: "queued" | "sending" | "sent"
+
 }
 
 type QueueMode = "immediate" | "hold"
@@ -49,6 +56,32 @@ const EMPTY_TOAST_DURATION_MS = (() => {
   return Number.isFinite(parsed) ? parsed : 4_000
 })()
 const INTERNAL_METADATA_KEY = "__open_queue_internal"
+
+const PRIORITY_REGEX = /^\s*\[\s*priority\s*:\s*(low|normal|high)\s*\]\s*/i
+
+function extractPriority(
+  parts: PromptPart[],
+): { priority: QueuePriority; parts: PromptPart[] } {
+  const firstText = parts.find((p) => p.type === "text")
+  if (!firstText || firstText.type !== "text") {
+    return { priority: "normal", parts }
+  }
+
+  const match = firstText.text.match(PRIORITY_REGEX)
+  if (!match) {
+    return { priority: "normal", parts }
+  }
+
+  const priority = match[1].toLowerCase() as QueuePriority
+
+  const cleanedText = firstText.text.replace(PRIORITY_REGEX, "")
+
+  const cleanedParts = parts.map((p) =>
+    p === firstText ? { ...p, text: cleanedText } : p,
+  )
+
+  return { priority, parts: cleanedParts }
+}
 
 function toPromptPart(part: Part): PromptPart | null {
   switch (part.type) {
@@ -120,11 +153,24 @@ function getPendingCount(queue: QueuedMessage[]) {
   return queue.filter((item) => item.status !== "sent").length
 }
 
+function priorityRank(priority: QueuePriority): number {
+  switch (priority) {
+    case "high":
+      return 2
+    case "normal":
+      return 1
+    case "low":
+      return 0
+    default:
+      return 0
+  }
+}
+
 function buildToastMessage(queue: QueuedMessage[]) {
   const pendingCount = getPendingCount(queue)
   const previewCount = Math.min(queue.length, TOAST_MAX_PREVIEWS)
   const previews = queue.slice(0, previewCount).map((item, index) => {
-    const text = buildPreview(item)
+    const text = `[${item.priority}] ${buildPreview(item)}`
     if (item.status === "sent") return ` ${index + 1}. [x] ~~${text}~~`
     if (item.status === "sending") return ` ${index + 1}. [>] ${text}`
     return ` ${index + 1}. [ ] ${text}`
@@ -222,7 +268,13 @@ export const MessageQueuePlugin: Plugin = async ({ client }) => {
     try {
       let showedEmptyToast = false
       while (true) {
-        const next = queue.find((item) => item.status === "queued")
+        const next = queue
+          .filter((item) => item.status === "queued")
+          .sort(
+            (a, b) =>
+              priorityRank(b.priority) - priorityRank(a.priority) ||
+              a.enqueuedAt - b.enqueuedAt,
+          )[0]
         if (!next) break
 
         next.status = "sending"
@@ -349,11 +401,13 @@ export const MessageQueuePlugin: Plugin = async ({ client }) => {
       const existingQueue = queueBySession.get(input.sessionID)
       const pendingCount = existingQueue ? getPendingCount(existingQueue) : 0
       const busy = busyBySession.get(input.sessionID) ?? false
-      const shouldQueue = busy || draining.has(input.sessionID) || pendingCount > 0
+      const shouldQueue = busy || draining.has(input.sessionID) || pendingCount >= 0//Set to >= to ensure first message is also included in the queue toast
       if (!shouldQueue) return
 
       const originalParts = [...output.parts]
       const queuedParts = originalParts.map(toPromptPart).filter((part): part is PromptPart => part !== null)
+      
+      const { priority, parts: cleanedParts } = extractPriority(queuedParts)
       const preview = extractPreview(queuedParts)
 
       enqueue(input.sessionID, {
@@ -362,7 +416,9 @@ export const MessageQueuePlugin: Plugin = async ({ client }) => {
         model: input.model ?? output.message.model,
         system: output.message.system,
         tools: output.message.tools,
-        parts: queuedParts,
+        parts: cleanedParts,
+        priority,
+        enqueuedAt: Date.now(),
         preview,
         status: "queued",
       })
